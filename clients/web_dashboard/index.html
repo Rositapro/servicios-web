@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suite de Servicios Web SOAP & RESTful - 6 Lenguajes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header principal -->
+    <header class="main-header">
+      <div class="header-content">
+        <div class="logo-area">
+          <div class="logo-badge">Unit 5</div>
+          <div>
+            <h1>Plataforma de Servicios Web Heterogéneos</h1>
+            <p class="subtitle">Implementación de Arquitecturas RESTful y SOAP en 6 Lenguajes (4 Software Libre + 2 Propietarios)</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="btn-run-all-benchmark" class="btn btn-gradient">
+            <span class="pulse-dot"></span>
+            ⚡ Ejecutar Benchmark en los 6 Servicios
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de estado de servicios en vivo -->
+      <div class="status-ribbon" id="status-ribbon">
+        <div class="ribbon-label">Estado de Nodos:</div>
+        <div class="status-chips" id="status-chips">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Selector de Lenguajes -->
+    <nav class="service-selector">
+      <div class="selector-title">Selecciona el Servicio a Invocar:</div>
+      <div class="lang-tabs" id="lang-tabs">
+        <button class="lang-tab active" data-lang="python" data-port="8082">
+          <span class="lang-tag libre">Libre</span>
+          <span class="lang-name">🐍 Python</span>
+          <span class="framework-tag">FastAPI & Spyne</span>
+          <span class="port-tag">:8082</span>
+        </button>
+        <button class="lang-tab" data-lang="csharp" data-port="8085">
+          <span class="lang-tag prop">Propietario</span>
+          <span class="lang-name">🔷 C# (.NET)</span>
+          <span class="framework-tag">ASP.NET Core & SoapCore</span>
+          <span class="port-tag">:8085</span>
+        </button>
+        <button class="lang-tab" data-lang="vbnet" data-port="8086">
+          <span class="lang-tag prop">Propietario</span>
+          <span class="lang-name">🟣 VB.NET</span>
+          <span class="framework-tag">ASP.NET Core & SoapCore</span>
+          <span class="port-tag">:8086</span>
+        </button>
+        <button class="lang-tab" data-lang="java" data-port="8081">
+          <span class="lang-tag libre">Libre</span>
+          <span class="lang-name">☕ Java</span>
+          <span class="framework-tag">Jakarta REST & JAX-WS</span>
+          <span class="port-tag">:8081</span>
+        </button>
+        <button class="lang-tab" data-lang="php" data-port="8083">
+          <span class="lang-tag libre">Libre</span>
+          <span class="lang-name">🐘 PHP</span>
+          <span class="framework-tag">Slim & PHP SoapServer</span>
+          <span class="port-tag">:8083</span>
+        </button>
+        <button class="lang-tab" data-lang="ruby" data-port="8084">
+          <span class="lang-tag libre">Libre</span>
+          <span class="lang-name">💎 Ruby</span>
+          <span class="framework-tag">Sinatra & SOAP Server</span>
+          <span class="port-tag">:8084</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Barra de Protocolo (REST vs SOAP) y Autenticación -->
+    <div class="protocol-bar">
+      <div class="protocol-toggles">
+        <button id="toggle-rest" class="proto-btn active">🌐 RESTful API (JSON)</button>
+        <button id="toggle-soap" class="proto-btn">📜 SOAP Service (XML / WSDL)</button>
+      </div>
+
+      <div class="auth-bar">
+        <span class="auth-label">Seguridad:</span>
+        <button id="btn-get-token" class="btn btn-sm btn-outline">🔑 Generar Token de Acceso</button>
+        <span id="token-status" class="token-badge active">Token Bearer / SOAP Listo</span>
+      </div>
+    </div>
+
+    <!-- Contenido Principal Dinámico -->
+    <main class="main-content">
+      
+      <!-- SECCIÓN REST -->
+      <section id="section-rest" class="view-section active">
+        <div class="grid-2cols">
+          <!-- Columna Izquierda: Controles REST -->
+          <div class="card panel-controls">
+            <h3 class="panel-title">Operaciones RESTful</h3>
+            <p class="panel-desc">Invocación de métodos HTTP con intercambio de payloads en formato JSON.</p>
+
+            <div class="rest-actions">
+              <div class="action-group">
+                <span class="group-title">Consultas (Idempotentes / Safe):</span>
+                <div class="btn-grid">
+                  <button class="btn btn-action" onclick="callRest('GET', '/api/products')">
+                    <span class="method get">GET</span> Listar Catálogo
+                  </button>
+                  <button class="btn btn-action" onclick="callRest('GET', '/api/products/1')">
+                    <span class="method get">GET</span> Producto #1
+                  </button>
+                  <button class="btn btn-action" onclick="callRest('GET', '/api/invoices')">
+                    <span class="method get">GET</span> Listar Facturas
+                  </button>
+                </div>
+              </div>
+
+              <div class="action-group">
+                <span class="group-title">Transacciones Protegidas (Requieren Token):</span>
+                <div class="btn-grid">
+                  <button class="btn btn-action" onclick="prepareCreateProduct()">
+                    <span class="method post">POST</span> Crear Producto
+                  </button>
+                  <button class="btn btn-action" onclick="prepareUpdateProduct()">
+                    <span class="method put">PUT</span> Actualizar #1
+                  </button>
+                  <button class="btn btn-action" onclick="callRest('DELETE', '/api/products/5')">
+                    <span class="method delete">DELETE</span> Eliminar #5
+                  </button>
+                  <button class="btn btn-action" onclick="prepareCreateInvoice()">
+                    <span class="method post">POST</span> Emitir Factura
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Editor de Payload REST -->
+            <div class="payload-editor-area">
+              <div class="editor-header">
+                <span>Payload de Envío (JSON):</span>
+                <button class="btn btn-xs" onclick="resetSampleRestJson()">Ejemplo Predeterminado</button>
+              </div>
+              <textarea id="rest-payload" class="code-editor" rows="7" placeholder="{}"></textarea>
+              <div class="editor-actions">
+                <button id="btn-execute-custom-rest" class="btn btn-primary">🚀 Ejecutar Solicitud HTTP</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Visor de Respuestas REST -->
+          <div class="card panel-response">
+            <div class="response-header">
+              <div class="resp-title-area">
+                <span class="resp-title">Respuesta del Servidor</span>
+                <span id="rest-url-badge" class="url-badge">GET /api/products</span>
+              </div>
+              <div class="resp-meta">
+                <span id="rest-status-code" class="status-code">200 OK</span>
+                <span id="rest-latency" class="latency">0 ms</span>
+              </div>
+            </div>
+            <pre class="response-body"><code id="rest-response-viewer">// Haz clic en alguna operación para enviar la petición...</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN SOAP -->
+      <section id="section-soap" class="view-section">
+        <div class="grid-2cols">
+          <!-- Columna Izquierda: Operaciones SOAP -->
+          <div class="card panel-controls">
+            <div class="soap-header-row">
+              <h3 class="panel-title">Operaciones SOAP 1.1</h3>
+              <button id="btn-view-wsdl" class="btn btn-sm btn-outline">📜 Ver Contrato WSDL</button>
+            </div>
+            <p class="panel-desc">Mensajería estructurada bajo contrato formal XML con cabeceras de autenticación.</p>
+
+            <div class="soap-op-selector">
+              <label>Operación del Contrato:</label>
+              <div class="btn-grid">
+                <button class="btn btn-action" onclick="loadSoapOp('GetProductStock')">GetProductStock</button>
+                <button class="btn btn-action" onclick="loadSoapOp('CalculateInvoice')">CalculateInvoice</button>
+                <button class="btn btn-action" onclick="loadSoapOp('ProcessInvoice')">ProcessInvoice</button>
+              </div>
+            </div>
+
+            <div class="soap-security-toggle">
+              <label class="switch-label">
+                <input type="checkbox" id="chk-soap-auth" checked>
+                <span class="switch-slider"></span>
+                Incluir Token de Seguridad Válido en Cabecera SOAP
+              </label>
+              <small class="hint">(Desmárcalo para probar la respuesta SOAP Fault 401 por falta de autenticación)</small>
+            </div>
+
+            <!-- Editor de XML SOAP Request -->
+            <div class="payload-editor-area">
+              <div class="editor-header">
+                <span>Envelope de Solicitud (XML):</span>
+              </div>
+              <textarea id="soap-request-xml" class="code-editor" rows="12"></textarea>
+              <div class="editor-actions">
+                <button id="btn-execute-soap" class="btn btn-primary">🚀 Enviar Envelope SOAP (POST)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Visor de Respuestas SOAP -->
+          <div class="card panel-response">
+            <div class="response-header">
+              <div class="resp-title-area">
+                <span class="resp-title">SOAP Envelope Response</span>
+                <span id="soap-url-badge" class="url-badge">POST /ws/FacturacionService</span>
+              </div>
+              <div class="resp-meta">
+                <span id="soap-status-code" class="status-code">200 OK</span>
+                <span id="soap-latency" class="latency">0 ms</span>
+              </div>
+            </div>
+            <pre class="response-body"><code id="soap-response-viewer">&lt;!-- El envelope de respuesta XML aparecerá aquí... --&gt;</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN BENCHMARK / COMPARATIVA EN VIVO -->
+      <section id="section-benchmark" class="benchmark-section">
+        <div class="card">
+          <div class="benchmark-header">
+            <div>
+              <h3>Matriz Comparativa en Vivo (Interoperabilidad Multi-Lenguaje)</h3>
+              <p>Resultados en tiempo real invocando endpoints REST y SOAP en las 6 arquitecturas simultáneamente.</p>
+            </div>
+            <button id="btn-refresh-benchmark" class="btn btn-outline">🔄 Re-ejecutar Pruebas</button>
+          </div>
+
+          <div class="table-container">
+            <table class="benchmark-table">
+              <thead>
+                <tr>
+                  <th>Lenguaje</th>
+                  <th>Tipo Licencia</th>
+                  <th>Frameworks (REST / SOAP)</th>
+                  <th>Puerto</th>
+                  <th>REST Status (Latencia)</th>
+                  <th>SOAP Status (Latencia)</th>
+                  <th>Interoperabilidad</th>
+                </tr>
+              </thead>
+              <tbody id="benchmark-tbody">
+                <!-- Inyectado por JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Modal para Contrato WSDL -->
+    <div id="wsdl-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Contrato WSDL 1.1 (FacturacionService.wsdl)</h3>
+          <button id="btn-close-modal" class="btn-close">&times;</button>
+        </div>
+        <pre class="modal-body"><code id="wsdl-content">Cargando WSDL...</code></pre>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <p>Práctica de Ejercicios: Servicios Web SOAP y RESTful en 6 Lenguajes • Instituto Tecnológico Superior de Monclova • 7mo Semestre</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

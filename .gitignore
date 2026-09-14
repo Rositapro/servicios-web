@@ -1,0 +1,27 @@
+# Compilación .NET (se excluyen carpetas temporales bin y obj)
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.idea/
+
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Java
+*.class
+*.jar
+*.war
+
+# Sistema Operativo y Logs
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

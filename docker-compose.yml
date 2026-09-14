@@ -1,0 +1,95 @@
+services:
+  # 1. Servicio Java (Software Libre) - Puerto 8081
+  service-java:
+    build:
+      context: ./services/java_service
+      dockerfile: Dockerfile
+    container_name: service-java-unit5
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    networks:
+      - web-services-net
+
+  # 2. Servicio Python (Software Libre) - Puerto 8082
+  service-python:
+    build:
+      context: ./services/python_service
+      dockerfile: Dockerfile
+    container_name: service-python-unit5
+    ports:
+      - "8082:8082"
+    restart: unless-stopped
+    networks:
+      - web-services-net
+
+  # 3. Servicio PHP (Software Libre) - Puerto 8083
+  service-php:
+    build:
+      context: ./services/php_service
+      dockerfile: Dockerfile
+    container_name: service-php-unit5
+    ports:
+      - "8083:8083"
+    restart: unless-stopped
+    networks:
+      - web-services-net
+
+  # 4. Servicio Ruby (Software Libre) - Puerto 8084
+  service-ruby:
+    build:
+      context: ./services/ruby_service
+      dockerfile: Dockerfile
+    container_name: service-ruby-unit5
+    ports:
+      - "8084:8084"
+    restart: unless-stopped
+    networks:
+      - web-services-net
+
+  # 5. Servicio C# (.NET) (Propietario) - Puerto 8085
+  service-csharp:
+    build:
+      context: ./services/csharp_service
+      dockerfile: Dockerfile
+    container_name: service-csharp-unit5
+    ports:
+      - "8085:8085"
+    restart: unless-stopped
+    networks:
+      - web-services-net
+
+  # 6. Servicio Visual Basic .NET (Propietario) - Puerto 8086
+  service-vbnet:
+    build:
+      context: ./services/vbnet_service
+      dockerfile: Dockerfile
+    container_name: service-vbnet-unit5
+    ports:
+      - "8086:8086"
+    restart: unless-stopped
+    networks:
+      - web-services-net
+
+  # 7. Dashboard Web Interactivo de Pruebas Unificadas - Puerto 8080
+  web-dashboard:
+    build:
+      context: ./clients/web_dashboard
+      dockerfile: Dockerfile
+    container_name: web-dashboard-unit5
+    ports:
+      - "8080:80"
+    depends_on:
+      - service-java
+      - service-python
+      - service-php
+      - service-ruby
+      - service-csharp
+      - service-vbnet
+    restart: unless-stopped
+    networks:
+      - web-services-net
+
+networks:
+  web-services-net:
+    driver: bridge

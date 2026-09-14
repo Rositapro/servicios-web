@@ -1,0 +1,220 @@
+{
+  "info": {
+    "name": "Servicios Web SOAP & RESTful - Unidad 5",
+    "description": "Colección completa para pruebas de los 6 microservicios heterogéneos (Java, Python, PHP, Ruby, C#, VB.NET) en arquitecturas RESTful y SOAP.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "rest_token", "value": "bearer-token-unit5-secret-key-2026", "type": "string" },
+    { "key": "soap_token", "value": "SOAP-SECRET-KEY-2026", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Python (FastAPI & Spyne :8082)",
+      "item": [
+        {
+          "name": "REST - Login Auth",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "http://localhost:8082/api/auth/login", "protocol": "http", "host": ["localhost"], "port": "8082", "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "REST - Listar Productos (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "http://localhost:8082/api/products", "protocol": "http", "host": ["localhost"], "port": "8082", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "REST - Crear Producto (POST - Bearer Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{rest_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"PROD006\",\n  \"name\": \"Disco SSD NVMe 1TB\",\n  \"category\": \"Almacenamiento\",\n  \"price\": 1850.0,\n  \"stock\": 30\n}"
+            },
+            "url": { "raw": "http://localhost:8082/api/products", "protocol": "http", "host": ["localhost"], "port": "8082", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "REST - Emitir Factura (POST - Bearer Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{rest_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Cliente Corporativo S.A.\",\n  \"items\": [\n    { \"productCode\": \"PROD001\", \"quantity\": 2 },\n    { \"productCode\": \"PROD003\", \"quantity\": 1 }\n  ]\n}"
+            },
+            "url": { "raw": "http://localhost:8082/api/invoices", "protocol": "http", "host": ["localhost"], "port": "8082", "path": ["api", "invoices"] }
+          }
+        },
+        {
+          "name": "SOAP - Descargar WSDL (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "http://localhost:8082/ws/FacturacionService?wsdl", "protocol": "http", "host": ["localhost"], "port": "8082", "path": ["ws", "FacturacionService"], "query": [{ "key": "wsdl", "value": null }] }
+          }
+        },
+        {
+          "name": "SOAP - GetProductStock (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://facturacion.com/services\">\n  <soapenv:Header>\n    <tns:SecurityHeader>\n      <tns:AuthToken>{{soap_token}}</tns:AuthToken>\n    </tns:SecurityHeader>\n  </soapenv:Header>\n  <soapenv:Body>\n    <tns:GetProductStockRequest>\n      <tns:ProductCode>PROD001</tns:ProductCode>\n    </tns:GetProductStockRequest>\n  </soapenv:Body>\n</soapenv:Envelope>"
+            },
+            "url": { "raw": "http://localhost:8082/ws/FacturacionService", "protocol": "http", "host": ["localhost"], "port": "8082", "path": ["ws", "FacturacionService"] }
+          }
+        },
+        {
+          "name": "SOAP - CalculateInvoice (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://facturacion.com/services\">\n  <soapenv:Header>\n    <tns:SecurityHeader>\n      <tns:AuthToken>{{soap_token}}</tns:AuthToken>\n    </tns:SecurityHeader>\n  </soapenv:Header>\n  <soapenv:Body>\n    <tns:CalculateInvoiceRequest>\n      <tns:CustomerName>Empresa Ejemplo</tns:CustomerName>\n      <tns:Items>\n        <tns:Item>\n          <tns:ProductCode>PROD001</tns:ProductCode>\n          <tns:Quantity>2</tns:Quantity>\n        </tns:Item>\n      </tns:Items>\n    </tns:CalculateInvoiceRequest>\n  </soapenv:Body>\n</soapenv:Envelope>"
+            },
+            "url": { "raw": "http://localhost:8082/ws/FacturacionService", "protocol": "http", "host": ["localhost"], "port": "8082", "path": ["ws", "FacturacionService"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. C# (.NET Core & SoapCore :8085)",
+      "item": [
+        {
+          "name": "REST - Listar Productos (GET)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:8085/api/products", "protocol": "http", "host": ["localhost"], "port": "8085", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "SOAP - GetProductStock (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://facturacion.com/services\">\n  <soapenv:Header>\n    <tns:SecurityHeader>\n      <tns:AuthToken>{{soap_token}}</tns:AuthToken>\n    </tns:SecurityHeader>\n  </soapenv:Header>\n  <soapenv:Body>\n    <tns:GetProductStockRequest>\n      <tns:ProductCode>PROD002</tns:ProductCode>\n    </tns:GetProductStockRequest>\n  </soapenv:Body>\n</soapenv:Envelope>"
+            },
+            "url": { "raw": "http://localhost:8085/ws/FacturacionService", "protocol": "http", "host": ["localhost"], "port": "8085", "path": ["ws", "FacturacionService"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. VB.NET (ASP.NET Core & SoapCore :8086)",
+      "item": [
+        {
+          "name": "REST - Listar Productos (GET)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:8086/api/products", "protocol": "http", "host": ["localhost"], "port": "8086", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "SOAP - GetProductStock (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://facturacion.com/services\">\n  <soapenv:Header>\n    <tns:SecurityHeader>\n      <tns:AuthToken>{{soap_token}}</tns:AuthToken>\n    </tns:SecurityHeader>\n  </soapenv:Header>\n  <soapenv:Body>\n    <tns:GetProductStockRequest>\n      <tns:ProductCode>PROD003</tns:ProductCode>\n    </tns:GetProductStockRequest>\n  </soapenv:Body>\n</soapenv:Envelope>"
+            },
+            "url": { "raw": "http://localhost:8086/ws/FacturacionService", "protocol": "http", "host": ["localhost"], "port": "8086", "path": ["ws", "FacturacionService"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Java (Jakarta REST / JAX-WS :8081)",
+      "item": [
+        {
+          "name": "REST - Listar Productos (GET)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:8081/api/products", "protocol": "http", "host": ["localhost"], "port": "8081", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "SOAP - GetProductStock (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://facturacion.com/services\">\n  <soapenv:Header>\n    <tns:SecurityHeader>\n      <tns:AuthToken>{{soap_token}}</tns:AuthToken>\n    </tns:SecurityHeader>\n  </soapenv:Header>\n  <soapenv:Body>\n    <tns:GetProductStockRequest>\n      <tns:ProductCode>PROD001</tns:ProductCode>\n    </tns:GetProductStockRequest>\n  </soapenv:Body>\n</soapenv:Envelope>"
+            },
+            "url": { "raw": "http://localhost:8081/ws/FacturacionService", "protocol": "http", "host": ["localhost"], "port": "8081", "path": ["ws", "FacturacionService"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. PHP (Slim & SoapServer :8083)",
+      "item": [
+        {
+          "name": "REST - Listar Productos (GET)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:8083/api/products", "protocol": "http", "host": ["localhost"], "port": "8083", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "SOAP - GetProductStock (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://facturacion.com/services\">\n  <soapenv:Header>\n    <tns:SecurityHeader>\n      <tns:AuthToken>{{soap_token}}</tns:AuthToken>\n    </tns:SecurityHeader>\n  </soapenv:Header>\n  <soapenv:Body>\n    <tns:GetProductStockRequest>\n      <tns:ProductCode>PROD001</tns:ProductCode>\n    </tns:GetProductStockRequest>\n  </soapenv:Body>\n</soapenv:Envelope>"
+            },
+            "url": { "raw": "http://localhost:8083/ws/FacturacionService", "protocol": "http", "host": ["localhost"], "port": "8083", "path": ["ws", "FacturacionService"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Ruby (Sinatra & SOAP :8084)",
+      "item": [
+        {
+          "name": "REST - Listar Productos (GET)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:8084/api/products", "protocol": "http", "host": ["localhost"], "port": "8084", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "SOAP - GetProductStock (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/xml; charset=utf-8" }],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://facturacion.com/services\">\n  <soapenv:Header>\n    <tns:SecurityHeader>\n      <tns:AuthToken>{{soap_token}}</tns:AuthToken>\n    </tns:SecurityHeader>\n  </soapenv:Header>\n  <soapenv:Body>\n    <tns:GetProductStockRequest>\n      <tns:ProductCode>PROD001</tns:ProductCode>\n    </tns:GetProductStockRequest>\n  </soapenv:Body>\n</soapenv:Envelope>"
+            },
+            "url": { "raw": "http://localhost:8084/ws/FacturacionService", "protocol": "http", "host": ["localhost"], "port": "8084", "path": ["ws", "FacturacionService"] }
+          }
+        }
+      ]
+    }
+  ]
+}

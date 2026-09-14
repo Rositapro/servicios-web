@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="facturacion-unit5-soapui" activeEnvironment="Default" name="FacturacionService_Unit5" soapui-version="5.7.0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings/>
+  <con:interface xsi:type="con:WsdlInterface" id="facturacion-interface" name="FacturacionBinding" type="wsdl" bindingName="{http://facturacion.com/services}FacturacionBinding" soapVersion="1_1" anonymous="optional" definition="FacturacionService.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:settings/>
+    <con:definitionCache type="TEXT"/>
+    <con:endpoints>
+      <con:endpoint>http://localhost:8081/ws/FacturacionService</con:endpoint>
+      <con:endpoint>http://localhost:8082/ws/FacturacionService</con:endpoint>
+      <con:endpoint>http://localhost:8083/ws/FacturacionService</con:endpoint>
+      <con:endpoint>http://localhost:8084/ws/FacturacionService</con:endpoint>
+      <con:endpoint>http://localhost:8085/ws/FacturacionService</con:endpoint>
+      <con:endpoint>http://localhost:8086/ws/FacturacionService</con:endpoint>
+    </con:endpoints>
+
+    <!-- Operación 1: GetProductStock -->
+    <con:operation id="op-GetProductStock" isOneWay="false" action="http://facturacion.com/services/GetProductStock" name="GetProductStock" bindingOperationName="GetProductStock" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+      <con:settings/>
+      <con:call id="req-GetProductStock-Auth" name="Request_Con_Autenticacion">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://localhost:8082/ws/FacturacionService</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://facturacion.com/services">
+   <soapenv:Header>
+      <tns:SecurityHeader>
+         <tns:AuthToken>SOAP-SECRET-KEY-2026</tns:AuthToken>
+      </tns:SecurityHeader>
+   </soapenv:Header>
+   <soapenv:Body>
+      <tns:GetProductStockRequest>
+         <tns:ProductCode>PROD001</tns:ProductCode>
+      </tns:GetProductStockRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+        <con:credentials>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:jmsPropertyConfig/>
+        <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://facturacion.com/services/GetProductStock"/>
+      </con:call>
+    </con:operation>
+
+    <!-- Operación 2: CalculateInvoice -->
+    <con:operation id="op-CalculateInvoice" isOneWay="false" action="http://facturacion.com/services/CalculateInvoice" name="CalculateInvoice" bindingOperationName="CalculateInvoice" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+      <con:settings/>
+      <con:call id="req-CalculateInvoice" name="Request_Calculo_Impuestos">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://localhost:8082/ws/FacturacionService</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://facturacion.com/services">
+   <soapenv:Header>
+      <tns:SecurityHeader>
+         <tns:AuthToken>SOAP-SECRET-KEY-2026</tns:AuthToken>
+      </tns:SecurityHeader>
+   </soapenv:Header>
+   <soapenv:Body>
+      <tns:CalculateInvoiceRequest>
+         <tns:CustomerName>Empresa SoapUI S.A.</tns:CustomerName>
+         <tns:Items>
+            <tns:Item>
+               <tns:ProductCode>PROD001</tns:ProductCode>
+               <tns:Quantity>2</tns:Quantity>
+            </tns:Item>
+         </tns:Items>
+      </tns:CalculateInvoiceRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+      </con:call>
+    </con:operation>
+
+    <!-- Operación 3: ProcessInvoice -->
+    <con:operation id="op-ProcessInvoice" isOneWay="false" action="http://facturacion.com/services/ProcessInvoice" name="ProcessInvoice" bindingOperationName="ProcessInvoice" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+      <con:settings/>
+      <con:call id="req-ProcessInvoice" name="Request_Emision_Factura">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://localhost:8082/ws/FacturacionService</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://facturacion.com/services">
+   <soapenv:Header>
+      <tns:SecurityHeader>
+         <tns:AuthToken>SOAP-SECRET-KEY-2026</tns:AuthToken>
+      </tns:SecurityHeader>
+   </soapenv:Header>
+   <soapenv:Body>
+      <tns:ProcessInvoiceRequest>
+         <tns:CustomerName>Comercializadora SoapUI</tns:CustomerName>
+         <tns:Items>
+            <tns:Item>
+               <tns:ProductCode>PROD003</tns:ProductCode>
+               <tns:Quantity>1</tns:Quantity>
+            </tns:Item>
+         </tns:Items>
+      </tns:ProcessInvoiceRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+      </con:call>
+    </con:operation>
+  </con:interface>
+  <con:properties/>
+  <con:wssContainer/>
+  <con:oAuth2ProfileContainer/>
+  <con:oAuth1ProfileContainer/>
+</con:soapui-project>

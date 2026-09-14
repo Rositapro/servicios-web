@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://facturacion.com/services"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://facturacion.com/services"
+                  name="FacturacionService">
+
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://facturacion.com/services" elementFormDefault="qualified">
+      
+      <!-- Seguridad Header -->
+      <xsd:element name="SecurityHeader">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="AuthToken" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <!-- GetProductStock -->
+      <xsd:element name="GetProductStockRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ProductCode" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="GetProductStockResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ProductCode" type="xsd:string"/>
+            <xsd:element name="ProductName" type="xsd:string"/>
+            <xsd:element name="Stock" type="xsd:int"/>
+            <xsd:element name="Price" type="xsd:double"/>
+            <xsd:element name="Available" type="xsd:boolean"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <!-- Item Request -->
+      <xsd:complexType name="ItemRequest">
+        <xsd:sequence>
+          <xsd:element name="ProductCode" type="xsd:string"/>
+          <xsd:element name="Quantity" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="ArrayOfItemRequest">
+        <xsd:sequence>
+          <xsd:element name="Item" type="tns:ItemRequest" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- CalculateInvoice -->
+      <xsd:element name="CalculateInvoiceRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CustomerName" type="xsd:string"/>
+            <xsd:element name="Items" type="tns:ArrayOfItemRequest"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="CalculateInvoiceResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Subtotal" type="xsd:double"/>
+            <xsd:element name="Tax" type="xsd:double"/>
+            <xsd:element name="Total" type="xsd:double"/>
+            <xsd:element name="ItemsCount" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <!-- ProcessInvoice -->
+      <xsd:element name="ProcessInvoiceRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CustomerName" type="xsd:string"/>
+            <xsd:element name="Items" type="tns:ArrayOfItemRequest"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="ProcessInvoiceResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="InvoiceNumber" type="xsd:string"/>
+            <xsd:element name="CustomerName" type="xsd:string"/>
+            <xsd:element name="Total" type="xsd:double"/>
+            <xsd:element name="Status" type="xsd:string"/>
+            <xsd:element name="Message" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+    </xsd:schema>
+  </wsdl:types>
+
+  <!-- Messages -->
+  <wsdl:message name="SecurityHeaderMessage">
+    <wsdl:part name="header" element="tns:SecurityHeader"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetProductStockInput">
+    <wsdl:part name="parameters" element="tns:GetProductStockRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetProductStockOutput">
+    <wsdl:part name="parameters" element="tns:GetProductStockResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="CalculateInvoiceInput">
+    <wsdl:part name="parameters" element="tns:CalculateInvoiceRequest"/>
+  </wsdl:message>
+  <wsdl:message name="CalculateInvoiceOutput">
+    <wsdl:part name="parameters" element="tns:CalculateInvoiceResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="ProcessInvoiceInput">
+    <wsdl:part name="parameters" element="tns:ProcessInvoiceRequest"/>
+  </wsdl:message>
+  <wsdl:message name="ProcessInvoiceOutput">
+    <wsdl:part name="parameters" element="tns:ProcessInvoiceResponse"/>
+  </wsdl:message>
+
+  <!-- Port Type -->
+  <wsdl:portType name="FacturacionPortType">
+    <wsdl:operation name="GetProductStock">
+      <wsdl:input message="tns:GetProductStockInput"/>
+      <wsdl:output message="tns:GetProductStockOutput"/>
+    </wsdl:operation>
+    <wsdl:operation name="CalculateInvoice">
+      <wsdl:input message="tns:CalculateInvoiceInput"/>
+      <wsdl:output message="tns:CalculateInvoiceOutput"/>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessInvoice">
+      <wsdl:input message="tns:ProcessInvoiceInput"/>
+      <wsdl:output message="tns:ProcessInvoiceOutput"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <!-- Binding -->
+  <wsdl:binding name="FacturacionBinding" type="tns:FacturacionPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
+    <wsdl:operation name="GetProductStock">
+      <soap:operation soapAction="http://facturacion.com/services/GetProductStock"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:SecurityHeaderMessage" part="header" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="CalculateInvoice">
+      <soap:operation soapAction="http://facturacion.com/services/CalculateInvoice"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:SecurityHeaderMessage" part="header" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="ProcessInvoice">
+      <soap:operation soapAction="http://facturacion.com/services/ProcessInvoice"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:SecurityHeaderMessage" part="header" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <!-- Service -->
+  <wsdl:service name="FacturacionService">
+    <wsdl:port name="FacturacionPort" binding="tns:FacturacionBinding">
+      <soap:address location="http://localhost:8080/ws/FacturacionService"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>
