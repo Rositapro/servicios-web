@@ -482,6 +482,51 @@ h1 {
   box-shadow: 0 3px 10px rgba(184, 115, 51, 0.12);
 }
 
+.input-action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #faf4ed;
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  flex-wrap: wrap;
+}
+
+.input-action-group:hover {
+  background: #ffffff;
+  border-color: var(--accent-caramel);
+  box-shadow: 0 3px 10px rgba(184, 115, 51, 0.12);
+}
+
+.input-action-group label {
+  font-family: var(--font-heading);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.number-input {
+  width: 54px;
+  padding: 4px 6px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  background: #fffdfa;
+  color: var(--text-main);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.number-input:focus {
+  border-color: var(--accent-caramel);
+  box-shadow: 0 0 6px rgba(184, 115, 51, 0.3);
+}
+
 .btn-sm {
   padding: 6px 14px;
   font-size: 12.5px;

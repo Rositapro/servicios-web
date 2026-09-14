@@ -187,23 +187,67 @@ function resetSampleRestJson() {
   }, null, 2);
 }
 
+function callRestGetById() {
+  const idInput = document.getElementById('input-get-id');
+  const id = idInput ? idInput.value : 1;
+  callRest('GET', `/api/products/${id}`);
+}
+
+function callRestDeleteById() {
+  const idInput = document.getElementById('input-del-id');
+  const id = idInput ? idInput.value : 5;
+  callRest('DELETE', `/api/products/${id}`);
+}
+
 function prepareCreateProduct() {
   resetSampleRestJson();
-  document.getElementById('btn-execute-custom-rest').onclick = () => {
+  const btn = document.getElementById('btn-execute-custom-rest');
+  btn.innerHTML = '🚀 Ejecutar POST /api/products';
+  btn.onclick = () => {
     callRest('POST', '/api/products', restPayloadEditor.value);
   };
 }
 
-function prepareUpdateProduct() {
-  restPayloadEditor.value = JSON.stringify({
-    code: "PROD001",
-    name: "Laptop ThinkPad E14 Gen 5 (Actualizada)",
-    category: "Computación",
-    price: 16900.0,
-    stock: 15
-  }, null, 2);
-  document.getElementById('btn-execute-custom-rest').onclick = () => {
-    callRest('PUT', '/api/products/1', restPayloadEditor.value);
+async function prepareUpdateProduct() {
+  const idInput = document.getElementById('input-put-id');
+  const id = idInput ? idInput.value : 1;
+  
+  // Intentar cargar datos reales del producto desde el servicio activo para facilitar su edición
+  try {
+    const res = await fetch(`http://localhost:${activeService.port}/api/products/${id}`);
+    if (res.ok) {
+      const prod = await res.json();
+      restPayloadEditor.value = JSON.stringify({
+        code: prod.code || `PROD00${id}`,
+        name: `${prod.name || 'Producto'} (Actualizado)`,
+        category: prod.category || "General",
+        price: prod.price ? Math.round(prod.price * 1.1) : 1200.0,
+        stock: prod.stock ? prod.stock + 5 : 20
+      }, null, 2);
+    } else {
+      restPayloadEditor.value = JSON.stringify({
+        code: `PROD00${id}`,
+        name: `Producto ID #${id} (Actualizado)`,
+        category: "General",
+        price: 1500.0,
+        stock: 20
+      }, null, 2);
+    }
+  } catch (e) {
+    restPayloadEditor.value = JSON.stringify({
+      code: `PROD00${id}`,
+      name: `Producto ID #${id} (Actualizado)`,
+      category: "General",
+      price: 1500.0,
+      stock: 20
+    }, null, 2);
+  }
+
+  const btn = document.getElementById('btn-execute-custom-rest');
+  btn.innerHTML = `🚀 Ejecutar PUT /api/products/${id}`;
+  btn.onclick = () => {
+    const currentId = (document.getElementById('input-put-id')?.value) || id;
+    callRest('PUT', `/api/products/${currentId}`, restPayloadEditor.value);
   };
 }
 
@@ -215,7 +259,9 @@ function prepareCreateInvoice() {
       { productCode: "PROD003", quantity: 3 }
     ]
   }, null, 2);
-  document.getElementById('btn-execute-custom-rest').onclick = () => {
+  const btn = document.getElementById('btn-execute-custom-rest');
+  btn.innerHTML = '🚀 Ejecutar POST /api/invoices';
+  btn.onclick = () => {
     callRest('POST', '/api/invoices', restPayloadEditor.value);
   };
 }

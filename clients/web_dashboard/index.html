@@ -113,9 +113,12 @@
                   <button class="btn btn-action" onclick="callRest('GET', '/api/products')">
                     <span class="method get">GET</span> Listar Catálogo
                   </button>
-                  <button class="btn btn-action" onclick="callRest('GET', '/api/products/1')">
-                    <span class="method get">GET</span> Producto #1
-                  </button>
+                  <div class="input-action-group">
+                    <span class="method get">GET</span>
+                    <label for="input-get-id">ID:</label>
+                    <input type="number" id="input-get-id" value="1" min="1" max="999" class="number-input" title="Ingresa el ID del producto a consultar" />
+                    <button class="btn btn-sm btn-action" onclick="callRestGetById()">Consultar</button>
+                  </div>
                   <button class="btn btn-action" onclick="callRest('GET', '/api/invoices')">
                     <span class="method get">GET</span> Listar Facturas
                   </button>
@@ -128,12 +131,18 @@
                   <button class="btn btn-action" onclick="prepareCreateProduct()">
                     <span class="method post">POST</span> Crear Producto
                   </button>
-                  <button class="btn btn-action" onclick="prepareUpdateProduct()">
-                    <span class="method put">PUT</span> Actualizar #1
-                  </button>
-                  <button class="btn btn-action" onclick="callRest('DELETE', '/api/products/5')">
-                    <span class="method delete">DELETE</span> Eliminar #5
-                  </button>
+                  <div class="input-action-group">
+                    <span class="method put">PUT</span>
+                    <label for="input-put-id">ID:</label>
+                    <input type="number" id="input-put-id" value="1" min="1" max="999" class="number-input" onchange="prepareUpdateProduct()" title="Ingresa el ID del producto a actualizar" />
+                    <button class="btn btn-sm btn-action" onclick="prepareUpdateProduct()">Cargar a Formulario</button>
+                  </div>
+                  <div class="input-action-group">
+                    <span class="method delete">DELETE</span>
+                    <label for="input-del-id">ID:</label>
+                    <input type="number" id="input-del-id" value="5" min="1" max="999" class="number-input" title="Ingresa el ID del producto a eliminar" />
+                    <button class="btn btn-sm btn-action" onclick="callRestDeleteById()">Eliminar</button>
+                  </div>
                   <button class="btn btn-action" onclick="prepareCreateInvoice()">
                     <span class="method post">POST</span> Emitir Factura
                   </button>
