@@ -1,6 +1,6 @@
 # Reporte Técnico y Manual de Práctica: Servicios Web SOAP y RESTful en 6 Lenguajes de Programación
 
-**Materia:** Programación Web / Sistemas Distribuidos — Unidad 5  
+**Materia:** Programación en ambiente cliente-servidor / Sistemas Distribuidos — Unidad 5  
 **Institución:** Instituto Tecnológico Superior de Monclova (ITSM)  
 **Semestre:** 7mo Semestre  
 **Proyecto:** Desarrollo, Implementación, Publicación, Consumo y Comparación de Servicios Web Heterogéneos  

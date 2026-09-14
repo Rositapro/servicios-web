@@ -79,6 +79,8 @@ services:
     container_name: web-dashboard-unit5
     ports:
       - "8080:80"
+    volumes:
+      - ./clients/web_dashboard:/usr/share/nginx/html:ro
     depends_on:
       - service-java
       - service-python
