@@ -353,24 +353,39 @@ function formatXml(xml) {
 
 // ==================== BENCHMARK COMPARATIVO ====================
 
-btnRunBenchmark.addEventListener('click', runBenchmark);
-btnRefreshBenchmark.addEventListener('click', runBenchmark);
+btnRunBenchmark.addEventListener('click', () => runBenchmark(true));
+btnRefreshBenchmark.addEventListener('click', () => runBenchmark(false));
 
-async function runBenchmark() {
+async function runBenchmark(scrollToView = false) {
+  if (btnRunBenchmark) {
+    btnRunBenchmark.disabled = true;
+    btnRunBenchmark.innerHTML = `<span class="pulse-dot"></span> ⏳ Midiendo los 6 Nodos...`;
+  }
+  if (btnRefreshBenchmark) {
+    btnRefreshBenchmark.disabled = true;
+    btnRefreshBenchmark.innerHTML = `⏳ Evaluando...`;
+  }
+
+  const benchSection = document.getElementById('section-benchmark');
+  if (scrollToView && benchSection) {
+    benchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   benchmarkTbody.innerHTML = SERVICES.map(s => `
     <tr id="bench-row-${s.id}">
       <td><strong>${s.name}</strong></td>
       <td><span class="lang-tag ${s.license === 'Libre' ? 'libre' : 'prop'}">${s.license}</span></td>
       <td><code>${s.frameworks}</code></td>
       <td><span class="port-tag">:${s.port}</span></td>
-      <td class="bench-rest">Midiendo...</td>
-      <td class="bench-soap">Midiendo...</td>
-      <td class="bench-interop"><span class="chip-dot"></span> Evaluando...</td>
+      <td class="bench-rest"><span style="color: var(--accent-caramel);">⏳ Midiendo...</span></td>
+      <td class="bench-soap"><span style="color: var(--accent-caramel);">⏳ Midiendo...</span></td>
+      <td class="bench-interop"><span style="color: var(--text-muted);">Evaluando...</span></td>
     </tr>
   `).join('');
 
   for (const s of SERVICES) {
     const row = document.getElementById(`bench-row-${s.id}`);
+    if (!row) continue;
     const restCell = row.querySelector('.bench-rest');
     const soapCell = row.querySelector('.bench-soap');
     const interopCell = row.querySelector('.bench-interop');
@@ -426,5 +441,14 @@ async function runBenchmark() {
     } else {
       interopCell.innerHTML = `<span style="color: var(--accent-rose); font-weight: 700;">❌ Inaccesible</span>`;
     }
+  }
+
+  if (btnRunBenchmark) {
+    btnRunBenchmark.disabled = false;
+    btnRunBenchmark.innerHTML = `<span class="pulse-dot"></span> ⚡ Ejecutar Benchmark en los 6 Servicios`;
+  }
+  if (btnRefreshBenchmark) {
+    btnRefreshBenchmark.disabled = false;
+    btnRefreshBenchmark.innerHTML = `🔄 Re-ejecutar Pruebas`;
   }
 }
